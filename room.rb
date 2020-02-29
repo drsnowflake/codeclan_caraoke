@@ -1,12 +1,15 @@
 class Room
 
-  attr_reader :name, :capacity, :guest_list, :song_list
+  attr_reader :name, :capacity, :guest_list, :song_list, :revenue
 
-  def initialize(name, capacity, guest_list = [], song_list = [])
+  def initialize(name, capacity)
     @name = name
     @capacity = capacity
-    @song_list = song_list
-    @guest_list = guest_list
+    @song_list = []
+    @guest_list = []
+    @entry_fee = 1000
+    @revenue = 0
+
   end
 
 
@@ -22,13 +25,23 @@ class Room
     @guest_list.delete(guest)
   end
 
-  def take_entry_fee(guest)
-    guest.wallet >= 1000 ? guest.remove_money(1000) : "Insufficent funds"
+  def entry_fee(guest)
+    guest.wallet >= @entry_fee ? take_money(guest, @entry_fee) : "Insufficent funds"
+  end
+
+  def sell_drink(guest, drink)
+    guest.wallet >= drink.cost ? take_money(guest, drink.cost) : "Insufficent funds"
+  end
+
+  def take_money(guest, amount)
+    guest.remove_money(amount)
+    @revenue += amount
   end
 
   def fav_song_in_song_list(guest)
     @song_list.include?(guest.fav_song) ? "Whoo!" : "Boo"
-
   end
+
+
 
 end

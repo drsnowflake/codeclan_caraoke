@@ -2,8 +2,10 @@ require('minitest/autorun')
 require('minitest/reporters')
 require('pry-byebug')
 
+require_relative('../bar.rb')
 require_relative('../song.rb')
 require_relative('../room.rb')
+require_relative('../drink.rb')
 require_relative('../guest.rb')
 
 Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
@@ -30,6 +32,14 @@ class RoomTest < MiniTest::Test
 
     @guest_list_for_test = [@guest1, @guest2]
 
+    @bar1 = Bar.new()
+    @bar2 = Bar.new()
+
+    @drink1 = Drink.new(500, "Beer")
+    @drink2 = Drink.new(750, "Wine")
+    @drink3 = Drink.new(1000, "Cocktail")
+
+    @drink_list = [@drink1, @drink2, @drink3]
   end
 
   def test_room_has_name
@@ -72,12 +82,12 @@ class RoomTest < MiniTest::Test
   end
 
   def test_guest_can_afford_entry__true
-    @room3.take_entry_fee(@guest1)
+    @room3.entry_fee(@guest1)
     assert_equal(4000, @guest1.wallet)
   end
 
   def test_guest_can_afford_entry__false
-    @room3.take_entry_fee(@guest4)
+    @room3.entry_fee(@guest4)
     assert_equal(500, @guest4.wallet)
   end
 
@@ -89,6 +99,21 @@ class RoomTest < MiniTest::Test
   def test_room_has_guest_fav_song__false
     @room3.add_to_song_list(@song4)
     assert_equal("Boo", @room3.fav_song_in_song_list(@guest3))
+  end
+
+  def test_room_has_revenue
+    assert_equal(0, @room2.revenue)
+  end
+
+  def test_room_made_revenue
+    @room2.entry_fee(@guest1)
+    assert_equal(1000, @room2.revenue)
+  end
+
+  def test_guest_buys_drink
+    @room2.sell_drink(@guest1, @drink3)
+    assert_equal(4000, @guest1.wallet)
+    assert_equal(1000, @room2.revenue)
   end
 
 end
