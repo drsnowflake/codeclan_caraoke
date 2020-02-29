@@ -19,7 +19,7 @@ class RoomTest < MiniTest::Test
 
     @guest1 = Guest.new("Rob", 5000, @song3)
     @guest2 = Guest.new("Angela", 7500, @song1)
-    @guest3 = Guest.new("Jura", 2000, @song2)
+    @guest3 = Guest.new("Jura", 2000, @song5)
     @guest4 = Guest.new("Cat", 500)
 
     @room1 = Room.new("Room1", 10)
@@ -45,11 +45,11 @@ class RoomTest < MiniTest::Test
   end
 
   def test_room_has_song_list__not_empty
-    assert_equal(5, @room3.song_list(@songs).length)
+    assert_equal(5, @room3.add_to_song_list(@songs).length)
   end
 
   def test_room_has_song_list__one_song
-    assert_equal(1, @room2.song_list(@song3).length)
+    assert_equal(1, @room2.add_to_song_list(@song3).length)
   end
 
   def test_room_check_in_guest
@@ -79,6 +79,16 @@ class RoomTest < MiniTest::Test
   def test_guest_can_afford_entry__false
     @room3.take_entry_fee(@guest4)
     assert_equal(500, @guest4.wallet)
+  end
+
+  def test_room_has_guest_fav_song__true
+    @room3.add_to_song_list(@song5)
+    assert_equal("Whoo!", @room3.fav_song_in_song_list(@guest3))
+  end
+
+  def test_room_has_guest_fav_song__false
+    @room3.add_to_song_list(@song4)
+    assert_equal("Boo", @room3.fav_song_in_song_list(@guest3))
   end
 
 end

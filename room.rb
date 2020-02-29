@@ -10,7 +10,7 @@ class Room
   end
 
 
-  def song_list(songs = [])
+  def add_to_song_list(songs = [])
     songs.kind_of?(Array) ? songs.each { |song| @song_list << song } : @song_list << songs
   end
 
@@ -24,6 +24,11 @@ class Room
 
   def take_entry_fee(guest)
     guest.wallet >= 1000 ? guest.remove_money(1000) : "Insufficent funds"
+  end
+
+  def fav_song_in_song_list(guest)
+    @song_list.include?(guest.fav_song) ? "Whoo!" : "Boo"
+
   end
 
 end
